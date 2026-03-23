@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Na Coffee</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <nav class="container nav-inner">
+      <a href="#home" class="logo">Na Coffee</a>
+      <ul class="nav-links">
+        <li><a href="#home">Trang chủ</a></li>
+        <li><a href="#about">Về chúng tôi</a></li>
+        <li><a href="#menu">Thực đơn</a></li>
+        <li><a href="#product">Sản phẩm</a></li>
+        <li><a href="#review">Đánh giá</a></li>
+        <li><a href="#contact">Liên hệ</a></li>
+        <li><a href="#blog">Tin tức</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="cart-btn" id="cartBtn">
+          🛒 <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+        <a href="login.html" class="nav-login" id="navLogin">Đăng nhập</a>
+        <a href="dashboard.html" class="nav-login" id="navDashboard" style="display:none">Tài khoản</a>
+        <button class="nav-login" id="navLogout" style="display:none" onclick="logout()">Đăng xuất</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- CART SIDEBAR -->
+  <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h2>GIỎ HÀNG</h2>
+      <button onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Tổng tiền:</span>
+        <span class="total-price" id="cartTotal">0đ</span>
+      </div>
+      <a href="checkout.html" class="btn-checkout">CHECKOUT</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>CÀ PHÊ CHO BUỔI SÁNG</h1>
+      <p>Một ly cà phê nóng vào buổi sáng mùa đông giá lạnh sẽ sưởi ấm trái tim của chính bạn.</p>
+      <a href="#menu" class="btn-primary">Đặt Ngay</a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section">
+    <div class="container">
+      <h2 class="section-title">VỀ <span>CHÚNG TÔI</span></h2>
+      <div class="about-grid">
+        <img src="img/about-img.jpeg" alt="About" class="about-img" />
+        <div>
+          <h3>ĐIỀU GÌ LÀM CÀ PHÊ CỦA CHÚNG TÔI TRỞ NÊN ĐẶC BIỆT</h3>
+          <p>Được chọn lọc từ những hạt cà phê chất lượng nhất của vùng tây nguyên xa xôi, chúng tôi dành cả tình cảm trong mỗi tách cà phê mang đến khách hàng.</p>
+          <p>Bạn cũng có thể đến trực tiếp cửa hàng để tận hưởng trực tiếp không gian tinh tế của chúng tôi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section id="menu" class="section bg-light">
+    <div class="container">
+      <h2 class="section-title">THỰC <span>ĐƠN</span></h2>
+      <div class="filters">
+        <div class="cat-btns">
+          <button class="cat-btn active" data-cat="coffee" onclick="filterCategory('coffee', this)">Cà phê</button>
+          <button class="cat-btn" data-cat="accessories" onclick="filterCategory('accessories', this)">Phụ kiện</button>
+        </div>
+        <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." oninput="handleSearch(this.value)" />
+        <select id="sortSelect" onchange="handleSort(this.value)">
+          <option value="">Sắp xếp</option>
+          <option value="price_asc">Giá tăng dần</option>
+          <option value="price_desc">Giá giảm dần</option>
+          <option value="name_asc">Tên A-Z</option>
+        </select>
+      </div>
+      <div class="product-grid" id="menuGrid">
+        <p class="loading">Đang tải...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCESSORIES -->
+  <section id="product" class="section">
+    <div class="container">
+      <h2 class="section-title">ĐỒ <span>THÊM</span></h2>
+      <div class="product-grid" id="accessoryGrid">
+        <p class="loading">Đang tải...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section id="review" class="section bg-light">
+    <div class="container">
+      <h2 class="section-title">ĐÁNH <span>GIÁ</span></h2>
+      <div class="review-grid">
+        <div class="review-card">
+          <p>"Thi thoảng ghé quán nhâm nhi vị coffee đắng nhẹ anh lại nhớ đến cuộc tình mình với Thảo."</p>
+          <strong>Hoàng Mạnh</strong>
+          <div class="stars">★★★★½</div>
+        </div>
+        <div class="review-card">
+          <p>"Vị cà phê ở đây khác với hầu hết những quán khác. Tới đầu môi cảm thấy vị đắng nhẹ."</p>
+          <strong>Hưng Thịnh</strong>
+          <div class="stars">★★★★½</div>
+        </div>
+        <div class="review-card">
+          <p>"Tôi đã thử hầu hết các quán cà phê ở Hà Nội nhưng đến với Na coffee tôi lại có một cảm giác khác."</p>
+          <strong>Hoàng Dương</strong>
+          <div class="stars">★★★★½</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2 class="section-title"><span>LIÊN</span> HỆ</h2>
+      <div class="contact-grid">
+        <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=105.7850%2C20.9750%2C105.7950%2C20.9850&layer=mapnik" class="map-frame" loading="lazy"></iframe>
+        <div>
+          <h3>THÔNG TIN CỦA BẠN</h3>
+          <form id="contactForm" onsubmit="submitContact(event)">
+            <input type="text" id="cName" placeholder="Họ tên" required />
+            <input type="email" id="cEmail" placeholder="Email" required />
+            <input type="tel" id="cPhone" placeholder="Số điện thoại" required />
+            <button type="submit" class="btn-primary">Gửi</button>
+          </form>
+          <p id="contactMsg" class="contact-msg"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <section id="blog" class="section bg-light">
+    <div class="container">
+      <h2 class="section-title">TIN <span>TỨC</span></h2>
+      <div class="blog-grid" id="blogGrid">
+        <p class="loading">Đang tải...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-icons">
+      <span>📘</span><span>🎵</span><span>🐦</span><span>📸</span>
+    </div>
+    <p>Created By <span>Na Coffee</span> | All Rights Reserved</p>
+  </footer>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="main.js"></script>
+</body>
+</html>

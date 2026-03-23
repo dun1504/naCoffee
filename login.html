@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng nhập – Na Coffee</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="navbar">
+    <nav class="container nav-inner">
+      <a href="index.html" class="logo">Na Coffee</a>
+    </nav>
+  </header>
+
+  <div class="auth-page">
+    <div class="auth-card">
+      <h1>Đăng nhập</h1>
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Mật khẩu" required />
+        <p class="auth-error" id="loginError"></p>
+        <button type="submit" class="btn-primary" id="loginBtn">Đăng nhập</button>
+      </form>
+      <p class="auth-footer">Chưa có tài khoản? <a href="register.html">Đăng ký</a></p>
+    </div>
+  </div>
+
+  <script>
+    const API = 'http://localhost:5000';
+
+    // Redirect if already logged in
+    if (localStorage.getItem('token')) window.location.href = 'index.html';
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      const errEl = document.getElementById('loginError');
+      btn.disabled = true; btn.textContent = 'Đang đăng nhập...';
+      errEl.textContent = '';
+
+      try {
+        const res = await fetch(`${API}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) { errEl.textContent = data.error || 'Đăng nhập thất bại'; return; }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        window.location.href = 'index.html';
+      } catch {
+        errEl.textContent = 'Lỗi kết nối server.';
+      } finally {
+        btn.disabled = false; btn.textContent = 'Đăng nhập';
+      }
+    }
+  </script>
+</body>
+</html>

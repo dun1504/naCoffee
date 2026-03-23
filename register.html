@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng ký – Na Coffee</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="navbar">
+    <nav class="container nav-inner">
+      <a href="index.html" class="logo">Na Coffee</a>
+    </nav>
+  </header>
+
+  <div class="auth-page">
+    <div class="auth-card">
+      <h1>Đăng ký</h1>
+      <form id="registerForm" onsubmit="handleRegister(event)">
+        <input type="text" id="name" placeholder="Họ tên" required />
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Mật khẩu" required />
+        <p class="auth-error" id="registerError"></p>
+        <button type="submit" class="btn-primary" id="registerBtn">Đăng ký</button>
+      </form>
+      <p class="auth-footer">Đã có tài khoản? <a href="login.html">Đăng nhập</a></p>
+    </div>
+  </div>
+
+  <script>
+    const API = 'http://localhost:3000/';
+
+    if (localStorage.getItem('token')) window.location.href = 'index.html';
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const btn = document.getElementById('registerBtn');
+      const errEl = document.getElementById('registerError');
+      btn.disabled = true; btn.textContent = 'Đang đăng ký...';
+      errEl.textContent = '';
+
+      try {
+        const res = await fetch(`${API}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) { errEl.textContent = data.error || 'Đăng ký thất bại'; return; }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        window.location.href = 'index.html';
+      } catch {
+        errEl.textContent = 'Lỗi kết nối server.';
+      } finally {
+        btn.disabled = false; btn.textContent = 'Đăng ký';
+      }
+    }
+  </script>
+</body>
+</html>
