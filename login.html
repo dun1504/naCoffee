@@ -28,37 +28,36 @@
   </div>
 
   <script>
-    const API = 'http://localhost:5000';
+    const redirecTo = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
 
-    // Redirect if already logged in
-    if (localStorage.getItem('token')) window.location.href = 'index.html';
+    // redirect if already logged in 
+    if(isLoggedIn()) window.location.href = redirecTo;
 
-    async function handleLogin(e) {
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    function handleLogin(e) {
       e.preventDefault();
       const btn = document.getElementById('loginBtn');
       const errEl = document.getElementById('loginError');
-      btn.disabled = true; btn.textContent = 'Đang đăng nhập...';
       errEl.textContent = '';
+      btn.disabled = true; 
+      btn.textContent = 'Đang đăng nhập...'
 
-      try {
-        const res = await fetch(`${API}/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: document.getElementById('email').value,
-            password: document.getElementById('password').value,
-          })
-        });
-        const data = await res.json();
-        if (!res.ok) { errEl.textContent = data.error || 'Đăng nhập thất bại'; return; }
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        window.location.href = 'index.html';
-      } catch {
-        errEl.textContent = 'Lỗi kết nối server.';
-      } finally {
+      const result = login(
+        document.getElementById('email').value,
+        document.getElementById('password').value 
+      );
+
+      if(!result.ok) {
+        errEl.textContent = result.error;
         btn.disabled = false; btn.textContent = 'Đăng nhập';
+        return;
       }
+      window.location.href = redirecTo;
     }
   </script>
 </body>
